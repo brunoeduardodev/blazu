@@ -1,32 +1,20 @@
-import { fibonacci, sum } from "../..";
+import { serialize_json } from "../..";
+import fs from "fs";
+import path from "path";
 
-const nativeFibonacci = (steps: number) => {
-  let a = 0;
-  let b = 1;
-  for (let i = 0; i < steps; i++) {
-    const c = a + b;
-    a = b;
-    b = c;
-  }
+const content = fs.readFileSync(
+  path.resolve(__dirname, "..", "..", "blazu_5mb.json"),
+  "utf-8"
+);
 
-  return b;
-};
+export const run = () => {
+  console.time("json parse");
+  JSON.parse(content);
+  console.timeEnd("json parse");
 
-const ITERATIONS = 1_000_000;
-const STEPS = 10000;
-
-const run = async () => {
-  console.time("rust fibonacci");
-  for (let i = 0; i < ITERATIONS; i++) {
-    fibonacci(STEPS);
-  }
-  console.timeEnd("rust fibonacci");
-
-  console.time("native fibonacci");
-  for (let i = 0; i < ITERATIONS; i++) {
-    nativeFibonacci(STEPS);
-  }
-  console.timeEnd("native fibonacci");
+  console.time("serialize_json");
+  serialize_json(content);
+  console.timeEnd("serialize_json");
 };
 
 run();
