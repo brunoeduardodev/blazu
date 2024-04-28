@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { Socket } from "net";
 import { describe, expect, it, vitest } from "vitest";
 
-import { augmentRequest, augmentResponse } from "./http";
+import { augmentRequest, augmentResponse } from "../../lib/http";
 
 describe("request augmentation", () => {
   it("should add params to request", () => {

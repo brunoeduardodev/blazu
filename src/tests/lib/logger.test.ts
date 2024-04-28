@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it, vitest } from "vitest";
 
-import { createLogger } from "./logger";
+import { createLogger } from "../../lib/logger";
 
 const noop = () => {};
 

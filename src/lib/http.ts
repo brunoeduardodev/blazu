@@ -9,8 +9,8 @@ type AugmentedFields = {
 export const augmentRequest = (
   _req: IncomingMessage,
   { params }: AugmentedFields
-): Request => {
-  const req = _req as Request;
+): Request<any> => {
+  const req = _req as Request<any>;
   req.params = params || {};
 
   return req;

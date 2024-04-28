@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ExtractParamsFromString, removeTrailingSlash } from "./util";
+import { ExtractParamsFromString, removeTrailingSlash } from "../../lib/util";
 
 type Equal<X, Y> =
   (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2

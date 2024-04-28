@@ -6,7 +6,7 @@ import {
   insertRouteHandlerIntoDynamicRoutingTree,
   makeDynamicRoutingTree,
   makeStaticRoutingTree,
-} from "./routing";
+} from "../../lib/routing";
 
 describe("static routing tree", () => {
   it("should be defined", () => {

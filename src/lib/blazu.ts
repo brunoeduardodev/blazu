@@ -1,4 +1,4 @@
-import { createServer, IncomingMessage, ServerResponse } from "http";
+import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
 import { augmentRequest, augmentResponse } from "./http";
 import { createLogger, LoggerPreference } from "./logger";
@@ -47,6 +47,37 @@ type MiddlewareHandler = (
   res: ResponseObject,
   next: NextFunction
 ) => MaybePromise<void>;
+
+export type Blazu = {
+  use(middleware: MiddlewareHandler): Blazu;
+  get<Pathname extends `/${string}`>(
+    path: Pathname,
+    handler: RouteHandler<Pathname>
+  ): Blazu;
+  post<Pathname extends `/${string}`>(
+    path: Pathname,
+    handler: RouteHandler<Pathname>
+  ): Blazu;
+  put<Pathname extends `/${string}`>(
+    path: Pathname,
+    handler: RouteHandler<Pathname>
+  ): Blazu;
+  patch<Pathname extends `/${string}`>(
+    path: Pathname,
+    handler: RouteHandler<Pathname>
+  ): Blazu;
+  delete<Pathname extends `/${string}`>(
+    path: Pathname,
+    handler: RouteHandler<Pathname>
+  ): Blazu;
+  handle([req, res]: [IncomingMessage, ServerResponse]): void;
+  listen(
+    port: number,
+    hostnameOrCallback?: string | ListenCallback,
+    callback?: ListenCallback
+  ): void;
+  stop(): void;
+};
 
 export const createBlazu = (options = defaultAppOptions) => {
   const logger = createLogger(options.logger);
@@ -127,13 +158,15 @@ export const createBlazu = (options = defaultAppOptions) => {
     );
   };
 
+  let server: Server;
+
   return {
     listen(
       port: number,
       hostnameOrCallback?: string | ListenCallback,
       callback?: ListenCallback
     ) {
-      const server = createServer(handleRequest);
+      server = createServer(handleRequest);
 
       const hostname =
         typeof hostnameOrCallback === "string"
@@ -188,6 +221,13 @@ export const createBlazu = (options = defaultAppOptions) => {
     ) {
       registerRoute("DELETE", path, handler);
       return this;
+    },
+    handle([req, res]: [IncomingMessage, ServerResponse]) {
+      handleRequest(req, res);
+    },
+    stop() {
+      if (!server) return;
+      server.close();
     },
   };
 };
